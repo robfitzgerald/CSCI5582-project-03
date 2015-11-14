@@ -106,6 +106,7 @@ chessRules::chessRules()
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
+	// TODO: make this into fib-step reachability matrix
 	reachabilities[(int)Piece::FIB] = new int [REACHABILITY_MATRIX_SIZE] {
 		2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,
 		2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,
@@ -127,7 +128,7 @@ chessRules::chessRules()
 
 int** chessRules::calculateEllipse(Piece p, int x1, int y1, int x2, int y2) 
 {
-	int** ellipse;
+	int* ellipse;
 	int start = x1 + (y1 * 15);
 	int end = x2 + (y2 * 15);
 
@@ -146,7 +147,7 @@ int chessRules::coordToIndex(int x, int y, int bound) {
 
 Position chessRules::indexToCoord(int index) 
 {
-	return Position((index % 15), (index / 15), REACHABILITY_MATRIX_LENGTH);
+	return Position((index % REACHABILITY_MATRIX_LENGTH), (index / REACHABILITY_MATRIX_LENGTH), REACHABILITY_MATRIX_LENGTH);
 }
 
 int chessRules::reverseIndex(int index)
@@ -158,7 +159,7 @@ int chessRules::asInt(Piece p) {
 	return static_cast<std::size_t> (p);
 }
 
-void displayMoves(char* piece, const int* board)
+void displayBoard(char* piece, int* board, int length)
 {
 	std::cout << "   --------";
 	int pieceIter = 0;
@@ -167,9 +168,9 @@ void displayMoves(char* piece, const int* board)
 		++pieceIter;
 	}
 	std::cout << "--------\n";
-	for (int i = 0; i < 15; ++i) {
-		for (int j = 0; j < 15; ++j) {
-			std::cout << board[(i*15)+j] << " ";
+	for (int i = 0; i < length; ++i) {
+		for (int j = 0; j < length; ++j) {
+			std::cout << board[(i*length)+j] << " ";
 		}
 		std::cout << "\n";
 	}

@@ -13,7 +13,7 @@ CXXFLAGS = -g -std=c++11
 
 LIBS = -lm
 
-OBJS = main.o chromaticNumber.o rjf_graphMatrix.o
+OBJS = moves.o moves.spec.o 
 
 TARGET = trajectories
 

@@ -1,7 +1,7 @@
 #ifndef moves_h
 #define moves_h
 
-void displayMoves(char*, int*);
+void displayBoard(char*, int*, int);
 
 const int REACHABILITY_MATRIX_SIZE = 225;
 const int REACHABILITY_MATRIX_LENGTH = 15;
@@ -10,12 +10,14 @@ const int BOARD_MATRIX_LENGTH = 8;
 enum class Piece { EMPTY, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, FIB, Count};
 struct Position
 {
-	Position(char row, int col, const int len) {
-		x = (int) row - len;
+	Position(int row, int col, const int len) {
+		x = row;
 		y = col;
+		length = len;
 	}
 	int x;
 	int y;
+	int length;
 };
 
 class chessRules
