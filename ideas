@@ -1,0 +1,49 @@
+input start position
+input goal position
+input any obstacles
+
+UI				RECURSIVE Fn			MOVES
+ka8-h8			Piece,x1,y1,x2,y2		Piece,x1,((x1*15) + y1)..
+
+
+generate one trajectory
+	construct a board representation of obstacles
+	construct an ellipse from the start/goal
+
+
+
+
+
+
+make an ellipse
+	calculate distance from start to goal
+	start traj
+	  create a board(8x8) for start piece
+	  superimpose reachability over board
+	  	center offset is 8,8 in reach matrix
+	    piece coordinates are their offset from 
+	      board start coordinate of 0,0
+	    caculate o.x = 8 - p.x, o.y = 8 - p.y. this is start
+	      offset for board in reach matrix
+	    now! copy values of reach matrix to 
+	      board by nested for 0 to < 8 i, j loops, using
+	      o.x + i, o.y + j
+	end traj
+	  do the same but use reverse index function
+	result board = add boards together, only storing values
+	  where a[i] + b[i] = distance (calcuated at beginning)
+	     
+
+
+
+
+std::string getChessNotation(TYPE t, int x1, int y1, int x2, int y2) {
+    std::string output;
+    output.push_back(getPieceChar(t));
+    output.push_back(97 + x1);
+    output.push_back(49 + y1);
+    output.push_back('-');
+    output.push_back(97 + x2);
+    output.push_back(49 + y2);
+    return output;
+}

@@ -27,7 +27,7 @@ public:
 	int* getReachability(Piece p) {
 		return reachabilities[asInt(p)];
 	}
-	int** calculateEllipse(Piece p, int x1, int y1, int x2, int y2);
+	int* calculateEllipse(Piece p, int x1, int y1, int x2, int y2);
 	int coordToIndex(int x, int y, int bound);
 	Position indexToCoord(int index);
 	int reverseIndex(int index);

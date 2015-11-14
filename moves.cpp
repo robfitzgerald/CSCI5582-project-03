@@ -1,4 +1,5 @@
 #include <iostream>
+#include "math.h"
 #include "moves.h"
 
 chessRules::chessRules() 
@@ -126,14 +127,38 @@ chessRules::chessRules()
 	};
 }
 
-int** chessRules::calculateEllipse(Piece p, int x1, int y1, int x2, int y2) 
+///////////////////////////////////////////////////////////////////////////
+// assumes we are determining the trajcetory ellipse, which is for an 8x8
+// board stored in an integer array of size 64.
+// returns a copy of the ellipse board
+int* chessRules::calculateEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd) 
 {
-	int* ellipse;
-	int start = x1 + (y1 * 15);
-	int end = x2 + (y2 * 15);
+	int* ellipse = new int [BOARD_MATRIX_SIZE];
+	//int xDist = std::abs(xEnd-xStart);
+	//int yDist = std::abs(yEnd-yStart);
+	//int distance = ((xDist > yDist) ? xDist : yDist);  NOT TRUE for all
+	int* startTrajectories = new int [BOARD_MATRIX_SIZE]; 
+	int* endTrajectories = new int [BOARD_MATRIX_SIZE];
+	// begin ƒ superimpose():
+	int xOffset = ceil(REACHABILITY_MATRIX_LENGTH/2);
+	int yOffset = xOffset;
+	xOffset -= xStart;
+	yOffset -= yStart;
+	std::cout << "xOffset: " << xOffset << ", yOffset: " << yOffset << "\n";
 
-
-	return ellipse;
+	for (int yIter = 0; yIter < BOARD_MATRIX_LENGTH; ++yIter) {
+		for (int xIter = 0; xIter < BOARD_MATRIX_LENGTH; ++xIter) {
+			int thisX = xIter + xOffset;
+			int thisY = yIter + yOffset;
+			int thisBoardIndex = coordToIndex(xIter,yIter,BOARD_MATRIX_LENGTH);
+			int thisReachIndex = coordToIndex(thisX,thisY,REACHABILITY_MATRIX_LENGTH);
+			std::cout << "thisX: " << thisX << ", thisY: " << thisY << "\n";
+			std::cout << "thisBoardIndex: " << thisBoardIndex << ", thisReachIndex: " << thisReachIndex << "\n";
+			std::cout << "value should be " << reachabilities[(int)p][thisReachIndex] << "\n";
+			startTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex];
+		}
+	}
+	return startTrajectories;
 }
 
 int chessRules::coordToIndex(int x, int y, int bound) {
@@ -168,7 +193,7 @@ void displayBoard(char* piece, int* board, int length)
 		++pieceIter;
 	}
 	std::cout << "--------\n";
-	for (int i = 0; i < length; ++i) {
+	for (int i = length-1; i >= 0; --i) {
 		for (int j = 0; j < length; ++j) {
 			std::cout << board[(i*length)+j] << " ";
 		}
