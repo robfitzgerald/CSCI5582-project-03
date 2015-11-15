@@ -1,9 +1,10 @@
 #include <iostream>
 #include "moves.h"
+#include "helper.h"
 
 int main() {
 
-	chessRules c,d,e,f,g,h;
+	chessRules c;
 	// basic functionality tests
 /*	for (int i = 0; i < REACHABILITY_MATRIX_LENGTH; ++i)
 	{

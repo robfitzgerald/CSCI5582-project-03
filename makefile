@@ -13,7 +13,7 @@ CXXFLAGS = -g -std=c++11
 
 LIBS = -lm
 
-OBJS = moves.o moves.spec.o 
+OBJS = moves.o helper.o main.o 
 
 TARGET = trajectories
 

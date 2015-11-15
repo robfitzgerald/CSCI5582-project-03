@@ -109,7 +109,7 @@ chessRules::chessRules()
 		0,6,6,6,6,6,6,6,6,6,6,6,6,6,0,
 		7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
 	};
-	// TODO: make this into fib-step reachability matrix
+	// TODO: make this into some special reachability matrix
 	reachabilities[(int)Piece::FIB] = new int [REACHABILITY_MATRIX_SIZE] {
 		0,0,5,0,5,0,0,4,0,0,5,0,5,0,0,
 		0,5,0,5,0,0,4,0,4,0,0,5,0,5,0,
@@ -340,4 +340,58 @@ void displayBoard(char* piece, int* board, int length)
 	std::cout << "\n";
 }
 
+Piece charToPiece(char c)
+{
+	switch(c)
+	{
+		case 'K':
+			return Piece::KING;
+			break;
+		case 'Q':
+			return Piece::QUEEN;
+			break;
+		case 'r':
+			return Piece::ROOK;
+			break;
+		case 'b':
+			return Piece::BISHOP;
+			break;
+		case 'k':
+			return Piece::KNIGHT;
+			break;
+		case 'p':
+			return Piece::PAWN;
+			break;
+		default:
+			return Piece::PAWN;
+	}
+	
+}
+
+char pieceToChar(Piece p)
+{
+	switch (p)
+	{
+		case Piece::KING:
+			return 'K';
+			break;
+		case Piece::QUEEN:
+			return 'Q';
+			break;
+		case Piece::ROOK:
+			return 'r';
+			break;
+		case Piece::BISHOP:
+			return 'b';
+			break;
+		case Piece::KNIGHT:
+			return 'k';
+			break;
+		case Piece::PAWN:
+			return 'p';
+			break;
+		default:
+			return 'p';
+	}
+}
 

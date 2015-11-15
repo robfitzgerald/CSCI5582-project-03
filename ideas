@@ -1,30 +1,29 @@
-To Do
+Priority    To Do
 
-any TODOs in code?
-input helper function
-	args
-        flags:
-            -a: expect input from assignment description, in the order they are listed for the assignment
-                ?
-                set X (a 2D table with or without obstacles), an element p for which 
-                 the trajectories should be calculated, relations of reachability for this 
-                 element (if necessary*), location of the element (the start of trajectories), 
-                 the end of trajectories, the length of trajectories.
-            -c: print out all valid trajectories on boards
-		chess notation for move
-		any locations of obstacles in chess notation
+1           input helper function
+            	args
+                    flags:
+                        -a: expect input from assignment description, in the order they are listed for the assignment
+                            ?
+                            set X (a 2D table with or without obstacles), an element p for which 
+                             the trajectories should be calculated, relations of reachability for this 
+                             element (if necessary*), location of the element (the start of trajectories), 
+                             the end of trajectories, the length of trajectories.
+                        -c: print out all valid trajectories on boards
+            	chess notation for move
+            	any locations of obstacles in chess notation
 
-fix pawn.
-fix results when only result is an empty board. (should be zero results);
-obstactles passed into trajectory problem, into genEllipse.
-moveString added to _trajectory
-graph drawing added to trajectory / _trajectory
-	records tree as traversals happen, by some calculation of the input can it guess how deep 
-	 the tree will go and then how to space out the move strings on each line accordingly?
-	OR, just, i mean, create a tree of moves. create a node structure of strings and connect it.
-create another unusual set of move rules
-a way to input length (maybe review the formal grammar and consider how to pass in lengths)
-a way to set whether we want to print all valid trajectories on boards
+1           fix pawn.
+3           fix results when only result is an empty board. (should be zero results);
+1           obstactles passed into trajectory problem, into genEllipse.
+2           moveString added to _trajectory
+2           graph drawing added to trajectory / _trajectory
+            	records tree as traversals happen, by some calculation of the input can it guess how deep 
+            	 the tree will go and then how to space out the move strings on each line accordingly?
+            	OR, just, i mean, create a tree of moves. create a node structure of strings and connect it.
+1           create another unusual set of move rules
+3           a way to input length (maybe review the formal grammar and consider how to pass in lengths)
+3           a way to set whether we want to print all valid trajectories on boards
 
 
 std::string getChessNotation(TYPE t, int x1, int y1, int x2, int y2) {
