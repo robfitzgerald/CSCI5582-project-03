@@ -3,7 +3,7 @@
 
 int main() {
 
-	chessRules c;
+	chessRules c,d,e,f,g,h;
 	// basic functionality tests
 /*	for (int i = 0; i < REACHABILITY_MATRIX_LENGTH; ++i)
 	{
@@ -26,7 +26,7 @@ int main() {
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,3),BOARD_MATRIX_LENGTH);
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,4),BOARD_MATRIX_LENGTH);
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,5),BOARD_MATRIX_LENGTH);
-	c.trajectory(Piece::KING,0,3,7,3);
+	c.trajectory(Piece::FIB,0,3,7,3);
 
 	return 0;
 }
