@@ -38,7 +38,7 @@ public:
 		return reachabilities[asInt(p)];
 	}
 	void trajectory(Piece p, int x1, int y1, int x2, int y2);
-	std::vector<int*> _trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dstep, int d, int* sum, int* path);
+	std::vector<std::vector<int> > _trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dstep, int d, int* sum, std::vector<int> path);
 	// TODO: genEllipse should take distance variable by reference from outer scope
 	int* genEllipse(Piece p, int x1, int y1, int x2, int y2, int& d);
 	int* genMove(Piece p, int x, int y, int d);

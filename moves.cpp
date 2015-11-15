@@ -140,29 +140,33 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2)
 	//	pick first option - an x,y pair. recurse with those and d + 1
 	int d = 0;
 	int* sum = genEllipse(p,x1,y1,x2,y2,d);
-	int* path = new int [BOARD_MATRIX_SIZE];
+	std::vector<int> path;
 	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
 	{
-		path[i] = 0;
+		path.push_back(0);
 	}
-	std::cout << "distance should be set in this scope (non-zero): " << d << "\n";
-	std::vector<int*> something = _trajectory(p,x1,y1,x1,y1,1,d, sum, path);
-	for (int i = 0; i < something.size(); ++i) 
+	std::cout << "initialized\n";
+	std::vector<std::vector<int> > result = _trajectory(p,x1,y1,x1,y1,1,d, sum, path);
+	std::cout << "out of recursive call\n";
+	for (int i = 0; i < result.size(); ++i) 
 	{
 		char title [] = "~";
-		displayBoard(title,something[i],BOARD_MATRIX_LENGTH);
+		int* printout = new int[BOARD_MATRIX_SIZE];
+		for (int j = 0; j < BOARD_MATRIX_SIZE; ++j) 
+		{
+			printout[j] = result[i][j];
+		}	
+		displayBoard(title,printout,BOARD_MATRIX_LENGTH);
 	}
 }
 
-std::vector<int*> chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum, int* path)
+std::vector<std::vector<int> > chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum, std::vector<int> path)
 {
-	std::vector<int*> paths;
-	if (dStep > d) 
-	{
-		return paths;
-	} else if (dStep == d) 
+	std::vector<std::vector<int> > paths;
+	if (dStep == d) 
 	{
 		paths.push_back(path);
+		return paths;
 	}
 
 	int* m1 = genMove(p,thisX,thisY,1);
@@ -189,22 +193,32 @@ std::vector<int*> chessRules::_trajectory(Piece p, int x1, int y1, int thisX, in
 	// displayBoard(mnT,mn,BOARD_MATRIX_LENGTH);
 	// displayBoard(moveT,map,BOARD_MATRIX_LENGTH);
 
+	// decision tree
+	std::cout << "decision section at step " << dStep << " with " << possibles.size() << " possibilities\n";
 	for (int i = 0; i < possibles.size(); ++i)
 	{
-		int* nextPath = new int [BOARD_MATRIX_SIZE];
-		for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
-		{
-			nextPath[i] = path[i];
-		}
-		nextPath[coordToIndex(possibles[i].x,possibles[i].y,BOARD_MATRIX_SIZE)] = 1;
+		std::vector<int> nextPath = path;
+		std::cout << "coord: " << possibles[i].x << "," << possibles[i].y << "\n";
+		nextPath[coordToIndex(possibles[i].x,possibles[i].y,BOARD_MATRIX_LENGTH)] = 1;
 		std::cout << "generating next step: " << possibles[i].x << "," << possibles[i].y << "\n";
-		std::vector<int*> thesePaths = _trajectory(p,x1,y1,possibles[i].x,possibles[i].y,dStep+1,d,sum,nextPath);
+		std::vector<std::vector<int> > thesePaths = _trajectory(p,x1,y1,possibles[i].x,possibles[i].y,dStep+1,d,sum,nextPath);
+		std::cout << "back to parent with " << thesePaths.size() << " paths\n";
 		for (int j = 0; j < thesePaths.size(); ++j)
 		{
+			char ti [] = "found path";
+			int* printout = new int[BOARD_MATRIX_SIZE];
+			for (int k = 0; k < BOARD_MATRIX_SIZE; ++k) 
+			{
+				printout[k] = thesePaths[j][k];
+			}	
+			displayBoard(ti,printout,BOARD_MATRIX_LENGTH);
+			std::cout << "add path " << j << " to return section\n";
 			paths.push_back(thesePaths[j]);
 		}
 	}
-
+	delete [] m1;
+	delete [] mn;
+	delete [] map;
 	return paths;
 }
 
