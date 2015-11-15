@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "math.h"
 #include "moves.h"
 
@@ -139,49 +140,77 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2)
 	//	pick first option - an x,y pair. recurse with those and d + 1
 	int d = 0;
 	int* sum = genEllipse(p,x1,y1,x2,y2,d);
+	int* path = new int [BOARD_MATRIX_SIZE];
+	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
+	{
+		path[i] = 0;
+	}
 	std::cout << "distance should be set in this scope (non-zero): " << d << "\n";
-	int something = _trajectory(p,x1,y1,x1,y1,1,d, sum);
-
+	std::vector<int*> something = _trajectory(p,x1,y1,x1,y1,1,d, sum, path);
+	for (int i = 0; i < something.size(); ++i) 
+	{
+		char title [] = "~";
+		displayBoard(title,something[i],BOARD_MATRIX_LENGTH);
+	}
 }
 
-int chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum)
+std::vector<int*> chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum, int* path)
 {
-	if (dStep > d) {
-		return 1;
+	std::vector<int*> paths;
+	if (dStep > d) 
+	{
+		return paths;
+	} else if (dStep == d) 
+	{
+		paths.push_back(path);
 	}
+
 	int* m1 = genMove(p,thisX,thisY,1);
 	int* mn = genMove(p,x1,y1,dStep);
 	int* map = new int [BOARD_MATRIX_SIZE];
-	int nextX, nextY;
-	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) {
+	std::vector<Position> possibles;
+	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
+	{
 		int found = (((sum[i] > 0) && (m1[i] > 0) && (mn[i] > 0)) ? 1 : 0);
 		map[i] = found;
 		if (found > 0) 
 		{
 			Position foundP = indexToCoord(i, BOARD_MATRIX_LENGTH);
-			nextX = foundP.x;
-			nextY = foundP.y;
+			possibles.push_back(foundP);
 		}
 	}
-	char sumT [] = "sum (ellipse)";
-	char m1T [] = "m1 (from current step)";
-	char mnT [] = "mn (from original spot)";
-	char moveT [] = "board";
-	displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
-	displayBoard(m1T,m1,BOARD_MATRIX_LENGTH);
-	displayBoard(mnT,mn,BOARD_MATRIX_LENGTH);
-	displayBoard(moveT,map,BOARD_MATRIX_LENGTH);
-	_trajectory(p,x1,y1,nextX,nextY,dStep+1,d,sum);
-	return 0;
+	std::cout << "possibles length: " << possibles.size() << "\n";
+	// char sumT [] = "sum (ellipse)";
+	// char m1T [] = "m1 (from current step)";
+	// char mnT [] = "mn (from original spot)";
+	// char moveT [] = "board";
+	// displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
+	// displayBoard(m1T,m1,BOARD_MATRIX_LENGTH);
+	// displayBoard(mnT,mn,BOARD_MATRIX_LENGTH);
+	// displayBoard(moveT,map,BOARD_MATRIX_LENGTH);
+
+	for (int i = 0; i < possibles.size(); ++i)
+	{
+		int* nextPath = new int [BOARD_MATRIX_SIZE];
+		for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
+		{
+			nextPath[i] = path[i];
+		}
+		nextPath[coordToIndex(possibles[i].x,possibles[i].y,BOARD_MATRIX_SIZE)] = 1;
+		std::cout << "generating next step: " << possibles[i].x << "," << possibles[i].y << "\n";
+		std::vector<int*> thesePaths = _trajectory(p,x1,y1,possibles[i].x,possibles[i].y,dStep+1,d,sum,nextPath);
+		for (int j = 0; j < thesePaths.size(); ++j)
+		{
+			paths.push_back(thesePaths[j]);
+		}
+	}
+
+	return paths;
 }
 
 int* chessRules::genMove(Piece p, int x, int y, int d)
 {
 	int* move = new int [BOARD_MATRIX_SIZE];
-/*	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)
-	{
-		move[index] = 0;
-	}*/
 	int xOffset = ceil(REACHABILITY_MATRIX_LENGTH/2);
 	int yOffset = xOffset;
 	xOffset -= x;
@@ -246,7 +275,7 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 			endTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex];
 		}
 	}
-
+	
 	// distance
 	int distanceToEnd = startTrajectories[coordToIndex(xEnd,yEnd,BOARD_MATRIX_LENGTH)];
 	int distanceToStart = endTrajectories[coordToIndex(xStart,yStart,BOARD_MATRIX_LENGTH)];
@@ -260,7 +289,6 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 			ellipse[index] = d;
 		}
 	}
-
 	return ellipse;
 }
 

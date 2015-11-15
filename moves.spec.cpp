@@ -17,9 +17,9 @@ int main() {
 	displayBoard(knightName,knight,REACHABILITY_MATRIX_LENGTH);
 */	
 	// logic tests
-	int d = 0;
-	int* someMove = c.genEllipse(Piece::KING,0,3,7,3,d);
-	char someMoveTitle [] = "board";
+	// int d = 0;
+	// int* someMove = c.genEllipse(Piece::QUEEN,0,3,7,3,d);
+	// char someMoveTitle [] = "board";
 	// displayBoard(someMoveTitle,someMove,BOARD_MATRIX_LENGTH);
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,1),BOARD_MATRIX_LENGTH);
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,2),BOARD_MATRIX_LENGTH);
