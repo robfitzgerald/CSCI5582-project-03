@@ -13,7 +13,7 @@ void displayBoard(char*, int*, int);
 Piece charToPiece(char);
 char pieceToChar(Piece);
 
-struct Position
+struct Positi3on
 {
 	Position(int row, int col, const int len) 
 	{

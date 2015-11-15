@@ -44,3 +44,19 @@ std::string intToChessNotation(Piece p, int x1, int y1, int x2, int y2) {
     output.push_back(49 + y2);
     return output;
 }
+
+std::vector<int> chessPositionToInt(std::string pos)
+{
+	std::vector<int> output;
+    output.push_back(pos.at(0) - 97);
+    output.push_back(pos.at(1) - 49);
+    return output;
+}
+
+std::string intToChessPosition(int x, int y)
+{
+	std::string output;
+    output.push_back(97 + x);
+    output.push_back(49 + y);
+    return output;	
+}
