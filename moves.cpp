@@ -128,11 +128,43 @@ chessRules::chessRules()
 	};
 }
 
+void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstacles)
+{
+
+}
+
+int* chessRules::genMove(Piece p, int x, int y, int d)
+{
+	int* move = new int [BOARD_MATRIX_SIZE];
+/*	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)
+	{
+		move[index] = 0;
+	}*/
+	int xOffset = ceil(REACHABILITY_MATRIX_LENGTH/2);
+	int yOffset = xOffset;
+	xOffset -= x;
+	yOffset -= y;
+	for (int yIter = 0; yIter < BOARD_MATRIX_LENGTH; ++yIter) 
+	{
+		for (int xIter = 0; xIter < BOARD_MATRIX_LENGTH; ++xIter) 
+		{
+			int thisX = xIter + xOffset;
+			int thisY = yIter + yOffset;
+			int thisBoardIndex = coordToIndex(xIter,yIter,BOARD_MATRIX_LENGTH);
+			int thisReachIndex = coordToIndex(thisX,thisY,REACHABILITY_MATRIX_LENGTH);
+			int thisValue = reachabilities[(int)p][thisReachIndex];
+			thisValue = ((thisValue==d) ? thisValue : 0);
+			move[thisBoardIndex] = thisValue;
+		}
+	}
+	return move;
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // assumes we are determining the trajcetory ellipse, which is for an 8x8
 // board stored in an integer array of size 64.
 // returns a copy of the ellipse board
-int* chessRules::calculateEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd) 
+int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd) 
 {
 	int* ellipse = new int [BOARD_MATRIX_SIZE];
 	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)

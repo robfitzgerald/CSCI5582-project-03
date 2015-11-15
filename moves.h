@@ -27,7 +27,10 @@ public:
 	int* getReachability(Piece p) {
 		return reachabilities[asInt(p)];
 	}
-	int* calculateEllipse(Piece p, int x1, int y1, int x2, int y2);
+	// TODO: genEllipse should take distance variable by reference from outer scope
+	void trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstacles);
+	int* genEllipse(Piece p, int x1, int y1, int x2, int y2);
+	int* genMove(Piece p, int x, int y, int d);
 	int coordToIndex(int x, int y, int bound);
 	Position indexToCoord(int index);
 	int reverseIndex(int index);
@@ -35,4 +38,5 @@ public:
 private:
 	int** reachabilities;
 };
+
 #endif
