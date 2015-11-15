@@ -128,9 +128,51 @@ chessRules::chessRules()
 	};
 }
 
-void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstacles)
+void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2)
 {
+	// given a piece, at a location x1,y1, with a goal x2,y2
+	// sum = genEllipse()
+	// enter into loop with currentX, currentY, currentD
+	//	m1 = genMove(p,currentX,currentY,1)
+	//	mn = genMove(p,x1,x2,currentD)
+	//	perform m1 ^ m2 ^ sum
+	//	pick first option - an x,y pair. recurse with those and d + 1
+	int d = 0;
+	int* sum = genEllipse(p,x1,y1,x2,y2,d);
+	std::cout << "distance should be set in this scope (non-zero): " << d << "\n";
+	int something = _trajectory(p,x1,y1,x1,y1,1,d, sum);
 
+}
+
+int chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum)
+{
+	if (dStep > d) {
+		return 1;
+	}
+	int* m1 = genMove(p,thisX,thisY,1);
+	int* mn = genMove(p,x1,y1,dStep);
+	int* map = new int [BOARD_MATRIX_SIZE];
+	int nextX, nextY;
+	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) {
+		int found = (((sum[i] > 0) && (m1[i] > 0) && (mn[i] > 0)) ? 1 : 0);
+		map[i] = found;
+		if (found > 0) 
+		{
+			Position foundP = indexToCoord(i, BOARD_MATRIX_LENGTH);
+			nextX = foundP.x;
+			nextY = foundP.y;
+		}
+	}
+	char sumT [] = "sum (ellipse)";
+	char m1T [] = "m1 (from current step)";
+	char mnT [] = "mn (from original spot)";
+	char moveT [] = "board";
+	displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
+	displayBoard(m1T,m1,BOARD_MATRIX_LENGTH);
+	displayBoard(mnT,mn,BOARD_MATRIX_LENGTH);
+	displayBoard(moveT,map,BOARD_MATRIX_LENGTH);
+	_trajectory(p,x1,y1,nextX,nextY,dStep+1,d,sum);
+	return 0;
 }
 
 int* chessRules::genMove(Piece p, int x, int y, int d)
@@ -164,16 +206,9 @@ int* chessRules::genMove(Piece p, int x, int y, int d)
 // assumes we are determining the trajcetory ellipse, which is for an 8x8
 // board stored in an integer array of size 64.
 // returns a copy of the ellipse board
-int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd) 
+int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd, int& d) 
 {
 	int* ellipse = new int [BOARD_MATRIX_SIZE];
-	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)
-	{
-		ellipse[index] = 0;
-	}
-	//int xDist = std::abs(xEnd-xStart);
-	//int yDist = std::abs(yEnd-yStart);
-	//int distance = ((xDist > yDist) ? xDist : yDist);  NOT TRUE for all
 	int* startTrajectories = new int [BOARD_MATRIX_SIZE]; 
 	int* endTrajectories = new int [BOARD_MATRIX_SIZE];
 	// begin ƒ superimpose() - **nice to have** abstraction of the below process
@@ -185,6 +220,7 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd)
 	yStartOffset -= yStart;
 	xEndOffset -= xEnd;
 	yEndOffset -= yEnd;
+
 	// startTrajectories
 	for (int yIter = 0; yIter < BOARD_MATRIX_LENGTH; ++yIter) 
 	{
@@ -214,15 +250,14 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd)
 	// distance
 	int distanceToEnd = startTrajectories[coordToIndex(xEnd,yEnd,BOARD_MATRIX_LENGTH)];
 	int distanceToStart = endTrajectories[coordToIndex(xStart,yStart,BOARD_MATRIX_LENGTH)];
-	int distance = ((distanceToEnd > distanceToStart) ? distanceToEnd : distanceToStart);
-	std::cout << "distance: " << distance << "\n";
+	d = ((distanceToEnd > distanceToStart) ? distanceToEnd : distanceToStart);
 	
 	// ellipse
 	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)
 	{
-		if ((startTrajectories[index] + endTrajectories[index]) == distance) 
+		if ((startTrajectories[index] + endTrajectories[index]) == d) 
 		{
-			ellipse[index] = distance;
+			ellipse[index] = d;
 		}
 	}
 
@@ -238,9 +273,9 @@ int chessRules::coordToIndex(int x, int y, int bound) {
 	}
 }
 
-Position chessRules::indexToCoord(int index) 
+Position chessRules::indexToCoord(int index, int bound) 
 {
-	return Position((index % REACHABILITY_MATRIX_LENGTH), (index / REACHABILITY_MATRIX_LENGTH), REACHABILITY_MATRIX_LENGTH);
+	return Position((index % bound), (index / bound), bound);
 }
 
 int chessRules::reverseIndex(int index)

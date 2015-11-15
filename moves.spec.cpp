@@ -17,17 +17,16 @@ int main() {
 	displayBoard(knightName,knight,REACHABILITY_MATRIX_LENGTH);
 */	
 	// logic tests
-	int* someMove = c.genEllipse(Piece::KING,0,3,7,3);
+	int d = 0;
+	int* someMove = c.genEllipse(Piece::KING,0,3,7,3,d);
 	char someMoveTitle [] = "board";
-	displayBoard(someMoveTitle,someMove,BOARD_MATRIX_LENGTH);
-	displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,1),BOARD_MATRIX_LENGTH);
-	displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,2),BOARD_MATRIX_LENGTH);
-	displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,3),BOARD_MATRIX_LENGTH);
-	displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,4),BOARD_MATRIX_LENGTH);
-	displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,5),BOARD_MATRIX_LENGTH);
-/*	int* anotherMove = c.calculateEllipse(Piece::KNIGHT,1,1,6,7);
-	char anotherMoveTitle [] = "far away knights";
-	displayBoard(anotherMoveTitle,anotherMove,BOARD_MATRIX_LENGTH);
-*/
+	// displayBoard(someMoveTitle,someMove,BOARD_MATRIX_LENGTH);
+	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,1),BOARD_MATRIX_LENGTH);
+	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,2),BOARD_MATRIX_LENGTH);
+	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,3),BOARD_MATRIX_LENGTH);
+	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,4),BOARD_MATRIX_LENGTH);
+	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,5),BOARD_MATRIX_LENGTH);
+	c.trajectory(Piece::KING,0,3,7,3);
+
 	return 0;
 }
