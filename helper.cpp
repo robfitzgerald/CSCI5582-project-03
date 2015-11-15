@@ -1,4 +1,5 @@
 #include "helper.h"
+#include <iostream>
 
 void parseCommandLine(int argc, char** argv, std::string& move, std::vector<std::string>& obstacles)
 {
@@ -7,24 +8,29 @@ void parseCommandLine(int argc, char** argv, std::string& move, std::vector<std:
 		// has obstacles
 		for (int i = 2; i < argc; ++i)
 		{
-			obstacles.push_back(new std::string(argv[i]));
+			obstacles.push_back(std::string(argv[i]));
 		}
 	}
 	if (argc > 1)
 	{
 		// has a move
-		move = new std::string(argv[1]);
+		move = std::string(argv[1]);
 	}
 }
 
 std::vector<int> chessNotationToInt(std::string moveString)
 {
     std::vector<int> output;
-    output.push_back(charToPiece(moveString.getChar(0)));
-    output.push_back(moveString.getChar(1) - 97);
-    output.push_back(moveString.getChar(2) - 49);
-    output.push_back(moveString.getChar(3) - 97);
-    output.push_back(moveString.getChar(4) - 49);
+    if (moveString.length() == 6)
+    {
+    	output.push_back((int)charToPiece(moveString.at(0)));
+	    output.push_back(moveString.at(1) - 97);
+	    output.push_back(moveString.at(2) - 49);
+	    // position 3 is a hyphen.
+	    output.push_back(moveString.at(4) - 97);
+	    output.push_back(moveString.at(5) - 49);
+    }
+
     return output;
 }
 
