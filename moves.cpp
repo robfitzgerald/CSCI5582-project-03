@@ -90,22 +90,23 @@ chessRules::chessRules()
 		5,4,5,4,3,4,3,4,3,4,3,4,5,4,5,
 		6,5,4,5,4,5,4,5,4,5,4,5,4,5,6,
 	};
+	// upside-down since array index 0 is the upper-left corner
 	reachabilities[(int)Piece::PAWN] = new int [REACHABILITY_MATRIX_SIZE] {
-		7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-	    0,6,6,6,6,6,6,6,6,6,6,6,6,6,0,
- 	    0,0,5,5,5,5,5,5,5,5,5,5,5,0,0,
-		0,0,0,4,4,4,4,4,4,4,4,4,0,0,0,
-		0,0,0,0,3,3,3,3,3,3,3,0,0,0,0,
-		0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,
+		0,0,0,0,3,3,3,3,3,3,3,0,0,0,0,
+		0,0,0,4,4,4,4,4,4,4,4,4,0,0,0,
+		0,0,5,5,5,5,5,5,5,5,5,5,5,0,0,
+		0,6,6,6,6,6,6,6,6,6,6,6,6,6,0,
+		7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
 	};
 	// TODO: make this into fib-step reachability matrix
 	reachabilities[(int)Piece::FIB] = new int [REACHABILITY_MATRIX_SIZE] {
@@ -134,31 +135,66 @@ chessRules::chessRules()
 int* chessRules::calculateEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd) 
 {
 	int* ellipse = new int [BOARD_MATRIX_SIZE];
+	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)
+	{
+		ellipse[index] = 0;
+	}
 	//int xDist = std::abs(xEnd-xStart);
 	//int yDist = std::abs(yEnd-yStart);
 	//int distance = ((xDist > yDist) ? xDist : yDist);  NOT TRUE for all
 	int* startTrajectories = new int [BOARD_MATRIX_SIZE]; 
 	int* endTrajectories = new int [BOARD_MATRIX_SIZE];
-	// begin ƒ superimpose():
-	int xOffset = ceil(REACHABILITY_MATRIX_LENGTH/2);
-	int yOffset = xOffset;
-	xOffset -= xStart;
-	yOffset -= yStart;
-	std::cout << "xOffset: " << xOffset << ", yOffset: " << yOffset << "\n";
-
-	for (int yIter = 0; yIter < BOARD_MATRIX_LENGTH; ++yIter) {
-		for (int xIter = 0; xIter < BOARD_MATRIX_LENGTH; ++xIter) {
-			int thisX = xIter + xOffset;
-			int thisY = yIter + yOffset;
+	// begin ƒ superimpose() - **nice to have** abstraction of the below process
+	int xStartOffset = ceil(REACHABILITY_MATRIX_LENGTH/2);
+	int yStartOffset = xStartOffset;
+	int xEndOffset = xStartOffset;
+	int yEndOffset = xStartOffset;
+	xStartOffset -= xStart;
+	yStartOffset -= yStart;
+	xEndOffset -= xEnd;
+	yEndOffset -= yEnd;
+	// startTrajectories
+	for (int yIter = 0; yIter < BOARD_MATRIX_LENGTH; ++yIter) 
+	{
+		for (int xIter = 0; xIter < BOARD_MATRIX_LENGTH; ++xIter) 
+		{
+			int thisX = xIter + xStartOffset;
+			int thisY = yIter + yStartOffset;
 			int thisBoardIndex = coordToIndex(xIter,yIter,BOARD_MATRIX_LENGTH);
 			int thisReachIndex = coordToIndex(thisX,thisY,REACHABILITY_MATRIX_LENGTH);
-			std::cout << "thisX: " << thisX << ", thisY: " << thisY << "\n";
-			std::cout << "thisBoardIndex: " << thisBoardIndex << ", thisReachIndex: " << thisReachIndex << "\n";
-			std::cout << "value should be " << reachabilities[(int)p][thisReachIndex] << "\n";
 			startTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex];
 		}
 	}
-	return startTrajectories;
+
+	// endTrajectories
+	for (int yIter = 0; yIter < BOARD_MATRIX_LENGTH; ++yIter) 
+	{
+		for (int xIter = 0; xIter < BOARD_MATRIX_LENGTH; ++xIter) 
+		{
+			int thisX = xIter + xEndOffset;
+			int flipY = yIter + yEndOffset;  // TODO: isn't flipping for pawn
+			int thisBoardIndex = coordToIndex(xIter,yIter,BOARD_MATRIX_LENGTH);
+			int thisReachIndex = coordToIndex(thisX,flipY,REACHABILITY_MATRIX_LENGTH);
+			endTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex];
+		}
+	}
+
+	// distance
+	int distanceToEnd = startTrajectories[coordToIndex(xEnd,yEnd,BOARD_MATRIX_LENGTH)];
+	int distanceToStart = endTrajectories[coordToIndex(xStart,yStart,BOARD_MATRIX_LENGTH)];
+	int distance = ((distanceToEnd > distanceToStart) ? distanceToEnd : distanceToStart);
+	std::cout << "distance: " << distance << "\n";
+	
+	// ellipse
+	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)
+	{
+		if ((startTrajectories[index] + endTrajectories[index]) == distance) 
+		{
+			ellipse[index] = distance;
+		}
+	}
+
+	return ellipse;
 }
 
 int chessRules::coordToIndex(int x, int y, int bound) {
@@ -186,6 +222,7 @@ int chessRules::asInt(Piece p) {
 
 void displayBoard(char* piece, int* board, int length)
 {
+	// header
 	std::cout << "   --------";
 	int pieceIter = 0;
 	while (piece[pieceIter]) {
@@ -193,9 +230,11 @@ void displayBoard(char* piece, int* board, int length)
 		++pieceIter;
 	}
 	std::cout << "--------\n";
-	for (int i = length-1; i >= 0; --i) {
-		for (int j = 0; j < length; ++j) {
-			std::cout << board[(i*length)+j] << " ";
+
+	// print right-side up, by y descending, x ascending
+	for (int y = length-1; y >= 0; --y) {  
+		for (int x = 0; x < length; ++x) {
+			std::cout << board[(y*length)+x] << " ";
 		}
 		std::cout << "\n";
 	}

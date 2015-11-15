@@ -17,8 +17,12 @@ int main() {
 	displayBoard(knightName,knight,REACHABILITY_MATRIX_LENGTH);
 */	
 	// logic tests
-	int* kb2 = c.calculateEllipse(Piece::KING,2,1,0,0);
-	char boardName [] = "trajectories kb2 (2,1)";
-	displayBoard(boardName,kb2,BOARD_MATRIX_LENGTH);
+	int* someMove = c.calculateEllipse(Piece::KING,3,3,3,5);
+	char someMoveTitle [] = "nearby kings";
+	displayBoard(someMoveTitle,someMove,BOARD_MATRIX_LENGTH);
+	int* anotherMove = c.calculateEllipse(Piece::KNIGHT,1,1,6,7);
+	char anotherMoveTitle [] = "far away knights";
+	displayBoard(anotherMoveTitle,anotherMove,BOARD_MATRIX_LENGTH);
+
 	return 0;
 }
