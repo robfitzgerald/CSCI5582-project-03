@@ -33,10 +33,6 @@ class chessRules
 {
 public:
 	chessRules();
-	int* getReachability(Piece p) 
-	{
-		return reachabilities[asInt(p)];
-	}
 	void trajectory(Piece p, int x1, int y1, int x2, int y2);
 	std::vector<std::vector<int> > _trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dstep, int d, int* sum, std::vector<int> path);
 	// TODO: genEllipse should take distance variable by reference from outer scope

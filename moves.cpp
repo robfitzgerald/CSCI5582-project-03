@@ -147,23 +147,26 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2)
 	}
 	std::cout << "initialized\n";
 	std::vector<std::vector<int> > result = _trajectory(p,x1,y1,x1,y1,1,d, sum, path);
-	std::cout << "out of recursive call\n";
-	for (int i = 0; i < result.size(); ++i) 
-	{
-		char title [] = "~";
-		int* printout = new int[BOARD_MATRIX_SIZE];
-		for (int j = 0; j < BOARD_MATRIX_SIZE; ++j) 
-		{
-			printout[j] = result[i][j];
-		}	
-		displayBoard(title,printout,BOARD_MATRIX_LENGTH);
-	}
+	// for (int i = 0; i < result.size(); ++i) 
+	// {
+	// 	char title [] = "~";
+	// 	int* printout = new int[BOARD_MATRIX_SIZE];
+	// 	for (int j = 0; j < BOARD_MATRIX_SIZE; ++j) 
+	// 	{
+	// 		printout[j] = result[i][j];
+	// 	}	
+	// 	displayBoard(title,printout,BOARD_MATRIX_LENGTH);
+	// }
+	char sumT [] = "complete trajectories";
+	displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
+	std::cout << "done, with " << result.size() << " results\n";
+
 }
 
 std::vector<std::vector<int> > chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum, std::vector<int> path)
 {
 	std::vector<std::vector<int> > paths;
-	if (dStep == d) 
+	if (dStep > d) 
 	{
 		paths.push_back(path);
 		return paths;
@@ -183,7 +186,6 @@ std::vector<std::vector<int> > chessRules::_trajectory(Piece p, int x1, int y1, 
 			possibles.push_back(foundP);
 		}
 	}
-	std::cout << "possibles length: " << possibles.size() << "\n";
 	// char sumT [] = "sum (ellipse)";
 	// char m1T [] = "m1 (from current step)";
 	// char mnT [] = "mn (from original spot)";
@@ -194,25 +196,13 @@ std::vector<std::vector<int> > chessRules::_trajectory(Piece p, int x1, int y1, 
 	// displayBoard(moveT,map,BOARD_MATRIX_LENGTH);
 
 	// decision tree
-	std::cout << "decision section at step " << dStep << " with " << possibles.size() << " possibilities\n";
 	for (int i = 0; i < possibles.size(); ++i)
 	{
 		std::vector<int> nextPath = path;
-		std::cout << "coord: " << possibles[i].x << "," << possibles[i].y << "\n";
 		nextPath[coordToIndex(possibles[i].x,possibles[i].y,BOARD_MATRIX_LENGTH)] = 1;
-		std::cout << "generating next step: " << possibles[i].x << "," << possibles[i].y << "\n";
 		std::vector<std::vector<int> > thesePaths = _trajectory(p,x1,y1,possibles[i].x,possibles[i].y,dStep+1,d,sum,nextPath);
-		std::cout << "back to parent with " << thesePaths.size() << " paths\n";
 		for (int j = 0; j < thesePaths.size(); ++j)
 		{
-			char ti [] = "found path";
-			int* printout = new int[BOARD_MATRIX_SIZE];
-			for (int k = 0; k < BOARD_MATRIX_SIZE; ++k) 
-			{
-				printout[k] = thesePaths[j][k];
-			}	
-			displayBoard(ti,printout,BOARD_MATRIX_LENGTH);
-			std::cout << "add path " << j << " to return section\n";
 			paths.push_back(thesePaths[j]);
 		}
 	}
