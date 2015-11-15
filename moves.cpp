@@ -147,16 +147,16 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2)
 	}
 	std::cout << "initialized\n";
 	std::vector<std::vector<int> > result = _trajectory(p,x1,y1,x1,y1,1,d, sum, path);
-	// for (int i = 0; i < result.size(); ++i) 
-	// {
-	// 	char title [] = "~";
-	// 	int* printout = new int[BOARD_MATRIX_SIZE];
-	// 	for (int j = 0; j < BOARD_MATRIX_SIZE; ++j) 
-	// 	{
-	// 		printout[j] = result[i][j];
-	// 	}	
-	// 	displayBoard(title,printout,BOARD_MATRIX_LENGTH);
-	// }
+	for (int i = 0; i < result.size(); ++i) 
+	{
+		char title [] = "~";
+		int* printout = new int[BOARD_MATRIX_SIZE];
+		for (int j = 0; j < BOARD_MATRIX_SIZE; ++j) 
+		{
+			printout[j] = result[i][j];
+		}	
+		displayBoard(title,printout,BOARD_MATRIX_LENGTH);
+	}
 	char sumT [] = "complete trajectories";
 	displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
 	std::cout << "done, with " << result.size() << " results\n";

@@ -26,7 +26,9 @@ int main() {
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,3),BOARD_MATRIX_LENGTH);
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,4),BOARD_MATRIX_LENGTH);
 	// displayBoard(someMoveTitle,c.genMove(Piece::KING,3,3,5),BOARD_MATRIX_LENGTH);
-	c.trajectory(Piece::FIB,0,3,7,3);
+	
+	//c.trajectory(Piece::KING,0,3,7,3);
 
+	c.trajectory(Piece::QUEEN,4,1,7,4);
 	return 0;
 }
