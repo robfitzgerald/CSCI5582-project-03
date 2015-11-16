@@ -1,7 +1,15 @@
 Priority    To Do
 
+
+1*          fix pawn.
+2           moveString added to _trajectory
+3           a way to set whether we want to print all valid trajectories on boards
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+√           create another unusual set of move rules
 √           input helper function
-            	args
+                args
                     flags:
                         -a: expect input from assignment description, in the order they are listed for the assignment
                             ?
@@ -10,19 +18,8 @@ Priority    To Do
                              element (if necessary*), location of the element (the start of trajectories), 
                              the end of trajectories, the length of trajectories.
                         -c: print out all valid trajectories on boards
-            	chess notation for move
-            	any locations of obstacles in chess notation
-
-1*          fix pawn.
-3           fix results when only result is an empty board. (should be zero results);
+                chess notation for move
+                any locations of obstacles in chess notation
+√           a way to input length (maybe review the formal grammar and consider how to pass in lengths)
 √           obstactles passed into trajectory problem, into genEllipse.
-2           moveString added to _trajectory
-
-THIS IS INCORRECT:
-2           graph drawing added to trajectory / _trajectory
-            	records tree as traversals happen, by some calculation of the input can it guess how deep 
-            	 the tree will go and then how to space out the move strings on each line accordingly?
-            	OR, just, i mean, create a tree of moves. create a node structure of strings and connect it.
-√           create another unusual set of move rules
-1           a way to input length (maybe review the formal grammar and consider how to pass in lengths)
-3           a way to set whether we want to print all valid trajectories on boards
+√           fix results when only result is an empty board. (should be zero results);
