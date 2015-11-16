@@ -60,3 +60,12 @@ std::string intToChessPosition(int x, int y)
     output.push_back(49 + y);
     return output;	
 }
+
+int coordToIndex(int x, int y, int bound) {
+	if (0 <= x && x <= bound && 0 <= y && y <= bound) 
+	{
+		return x + (y * bound);
+	} else {
+		return -1;
+	}
+}

@@ -9,5 +9,6 @@ std::vector<int> chessNotationToInt(std::string);
 std::string intToChessNotation(Piece,int,int,int,int);
 std::vector<int> chessPositionToInt(std::string);
 std::string intToChessPosition(int,int);
+int coordToIndex(int,int,int);
 
 #endif
