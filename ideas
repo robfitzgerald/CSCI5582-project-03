@@ -13,7 +13,7 @@ Priority    To Do
             	chess notation for move
             	any locations of obstacles in chess notation
 
-1           fix pawn.
+1*          fix pawn.
 3           fix results when only result is an empty board. (should be zero results);
 √           obstactles passed into trajectory problem, into genEllipse.
 2           moveString added to _trajectory

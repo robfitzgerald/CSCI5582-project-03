@@ -293,6 +293,10 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 			ellipse[index] = d;
 		}
 	}
+	char sT [] = "startTrajectories";
+	char eT [] = "endTrajectories";
+	displayBoard(sT,startTrajectories,BOARD_MATRIX_LENGTH);
+	displayBoard(eT,endTrajectories,BOARD_MATRIX_LENGTH);
 	return ellipse;
 }
 
