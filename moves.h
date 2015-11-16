@@ -11,6 +11,7 @@ enum class Piece { EMPTY, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, FIB, Count};
 
 void displayBoard(char*, int*, int);
 Piece charToPiece(char);
+Piece intToPiece(int);
 char pieceToChar(Piece);
 
 struct Position
@@ -36,7 +37,7 @@ class chessRules
 {
 public:
 	chessRules();
-	void trajectory(Piece p, int x1, int y1, int x2, int y2);
+	void trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstacles);
 	std::vector<std::vector<int> > _trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dstep, int d, int* sum, std::vector<int> path);
 	int* genEllipse(Piece p, int x1, int y1, int x2, int y2, int& d);
 	int* genMove(Piece p, int x, int y, int d);

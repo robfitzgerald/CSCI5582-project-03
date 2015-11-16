@@ -129,7 +129,7 @@ chessRules::chessRules()
 	};
 }
 
-void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2)
+void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstacles)
 {
 	// given a piece, at a location x1,y1, with a goal x2,y2
 	// sum = genEllipse()
@@ -140,6 +140,15 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2)
 	//	pick first option - an x,y pair. recurse with those and d + 1
 	int d = 0;
 	int* sum = genEllipse(p,x1,y1,x2,y2,d);
+	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i)
+	{
+		if (sum[i] != 0)
+		{
+			sum[i] += obstacles[i];
+		}
+	}
+	char title [] = "ellipse with obstacles";
+	displayBoard(title,sum,BOARD_MATRIX_LENGTH);
 	std::vector<int> path;
 	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
 	{
@@ -363,9 +372,35 @@ Piece charToPiece(char c)
 			return Piece::PAWN;
 			break;
 		default:
+			return Piece::EMPTY;
+	}	
+}
+
+Piece intToPiece(int i)
+{
+	switch(i)
+	{
+		case 6:
+			return Piece::KING;
+			break;
+		case 5:
+			return Piece::QUEEN;
+			break;
+		case 4:
+			return Piece::ROOK;
+			break;
+		case 3:
+			return Piece::BISHOP;
+			break;
+		case 2:
+			return Piece::KNIGHT;
+			break;
+		case 1:
 			return Piece::PAWN;
-	}
-	
+			break;
+		default:
+			return Piece::EMPTY;
+	}	
 }
 
 char pieceToChar(Piece p)
