@@ -6,11 +6,15 @@ int main (int argc, char** argv)
 {
 	chessRules c;
 	std::vector<std::string> obstacles;
-	std::string moveString;
-	parseCommandLine(argc,argv,moveString,obstacles);
-
+	std::string moveString = "";
+	int length = 0;
+	parseCommandLine(argc,argv,moveString,length,obstacles);
 	std::vector<int> move = chessNotationToInt(moveString);
-
+	if (invalidInput(move,asInt(Piece::Count)) || (moveString == "help") || (length == 0))
+	{
+		printUsageToConsole();
+		return 1;
+	}
 
 	int* obstacleBoard = new int [BOARD_MATRIX_SIZE];
 	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 

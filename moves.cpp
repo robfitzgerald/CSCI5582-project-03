@@ -319,7 +319,7 @@ int chessRules::reverseIndex(int index)
 	return REACHABILITY_MATRIX_SIZE - index;
 }
 
-int chessRules::asInt(Piece p) {
+int asInt(Piece p) {
 	return static_cast<std::size_t> (p);
 }
 

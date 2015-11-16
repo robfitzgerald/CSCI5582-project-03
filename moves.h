@@ -13,6 +13,7 @@ void displayBoard(char*, int*, int);
 Piece charToPiece(char);
 Piece intToPiece(int);
 char pieceToChar(Piece);
+int asInt(Piece p);
 
 struct Position
 {
@@ -44,7 +45,7 @@ public:
 	int coordToIndex(int x, int y, int bound);
 	Position indexToCoord(int index, int bound);
 	int reverseIndex(int index);
-	int asInt(Piece p);
+	
 private:
 	int** reachabilities;
 };

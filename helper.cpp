@@ -1,20 +1,22 @@
 #include "helper.h"
 #include <iostream>
 
-void parseCommandLine(int argc, char** argv, std::string& move, std::vector<std::string>& obstacles)
+void parseCommandLine(int argc, char** argv, std::string& move, int& length, std::vector<std::string>& obstacles)
 {
-	if (argc > 2)
+	// ./trajectories <move> <length>
+	if (argc > 3)
 	{
 		// has obstacles
-		for (int i = 2; i < argc; ++i)
+		for (int i = 3; i < argc; ++i)
 		{
 			obstacles.push_back(std::string(argv[i]));
 		}
 	}
-	if (argc > 1)
+	if (argc > 2)
 	{
-		// has a move
+		// has a move and length
 		move = std::string(argv[1]);
+		length = atoi(argv[2]);
 	}
 }
 
@@ -68,4 +70,35 @@ int coordToIndex(int x, int y, int bound) {
 	} else {
 		return -1;
 	}
+}
+
+bool invalidInput(std::vector<int> input, int numberOfPieceTypes)
+{
+	return !(
+		// left as expected values within parens for readability,
+		// negated outside of parens.
+		input.size() == 5 &&
+		0 <= input[0] &&
+		input[0] < numberOfPieceTypes &&
+		0 <= input[1] &&
+		input[1] < 8 &&
+		0 <= input[2] &&
+		input[2] < 8 &&
+		0 <= input[3] &&
+		input[3] < 8 &&
+		0 <= input[4] &&
+		input[4] < 8
+		);
+}
+
+void printUsageToConsole()
+{
+	std::cout << "\nusage: \n";
+	std::cout << "./trajectories <chess-move> <length> [<obstacle> ..]\n";
+	std::cout << "<chess-move> : <piece><position>-<position>\n";
+	std::cout << "<piece> : K | Q | r | b | k | p | S\n";
+	std::cout << "<position> : ([a-g][1-8])\n";
+	std::cout << "<length> : [1-7]\n";
+	std::cout << "<obstacle> : <position>\n";
+	std::cout << "\n";
 }

@@ -1,6 +1,9 @@
 #include "graph.h"
 
-node::node(){}
+node::node()
+{
+	thisMove = "":
+}
 
 node::node(std::string s)
 {
