@@ -109,23 +109,23 @@ chessRules::chessRules()
 		0,6,6,6,6,6,6,6,6,6,6,6,6,6,0,
 		7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
 	};
-	// TODO: make this into some special reachability matrix
-	reachabilities[(int)Piece::FIB] = new int [REACHABILITY_MATRIX_SIZE] {
-		0,0,5,0,5,0,0,4,0,0,5,0,5,0,0,
-		0,5,0,5,0,0,4,0,4,0,0,5,0,5,0,
-		5,0,0,0,5,4,0,0,0,4,5,0,0,0,5,
-		0,5,0,0,4,0,0,3,0,0,4,0,0,5,0,
-		0,0,5,4,0,4,3,0,3,4,0,4,5,0,0,
-		0,0,4,5,4,3,4,2,4,3,4,5,4,0,0,
-		0,4,0,0,3,0,2,1,2,0,3,0,0,4,0,
-		4,0,0,3,0,2,1,0,1,2,0,3,0,0,4,
-		0,4,0,0,3,0,2,1,2,0,3,0,0,4,0,
-		0,0,4,5,4,3,4,2,4,3,4,5,4,0,0,
-		0,0,5,4,0,4,3,0,3,4,0,4,5,0,0,
-		0,5,0,0,4,0,0,3,0,0,4,0,0,5,0,
-		5,0,0,0,5,4,0,0,0,4,5,0,0,0,5,
-		0,5,0,5,0,0,4,0,4,0,0,5,0,5,0,
-		0,0,5,0,5,0,0,4,0,0,5,0,5,0,0,
+	// skips
+	reachabilities[(int)Piece::SKIPPY] = new int [REACHABILITY_MATRIX_SIZE] {
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,6,0,5,0,4,0,3,0,4,0,5,0,6,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,5,0,4,0,3,0,2,0,3,0,4,0,5,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,4,0,3,0,2,0,1,0,2,0,3,0,4,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,3,0,2,0,1,0,0,0,1,0,2,0,3,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,4,0,3,0,2,0,1,0,2,0,3,0,4,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,5,0,4,0,3,0,2,0,3,0,4,0,5,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,6,0,5,0,4,0,3,0,4,0,5,0,6,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 }
 
@@ -139,16 +139,7 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstac
 	//	perform m1 ^ m2 ^ sum
 	//	pick first option - an x,y pair. recurse with those and d + 1
 	int d = 0;
-	int* sum = genEllipse(p,x1,y1,x2,y2,d);
-	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i)
-	{
-		if (sum[i] != 0)
-		{
-			sum[i] += obstacles[i];
-		}
-	}
-	char title [] = "ellipse with obstacles";
-	displayBoard(title,sum,BOARD_MATRIX_LENGTH);
+	int* sum = genEllipse(p,x1,y1,x2,y2,d,obstacles);
 	std::vector<int> path;
 	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
 	{
@@ -248,7 +239,7 @@ int* chessRules::genMove(Piece p, int x, int y, int d)
 // assumes we are determining the trajcetory ellipse, which is for an 8x8
 // board stored in an integer array of size 64.
 // returns a copy of the ellipse board
-int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd, int& d) 
+int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd, int& d, int* ob) 
 {
 	int* ellipse = new int [BOARD_MATRIX_SIZE];
 	int* startTrajectories = new int [BOARD_MATRIX_SIZE]; 
@@ -272,7 +263,7 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 			int thisY = yIter + yStartOffset;
 			int thisBoardIndex = coordToIndex(xIter,yIter,BOARD_MATRIX_LENGTH);
 			int thisReachIndex = coordToIndex(thisX,thisY,REACHABILITY_MATRIX_LENGTH);
-			startTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex];
+			startTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex] + ob[thisBoardIndex];
 		}
 	}
 
@@ -285,7 +276,7 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 			int flipY = yIter + yEndOffset;  // TODO: isn't flipping for pawn
 			int thisBoardIndex = coordToIndex(xIter,yIter,BOARD_MATRIX_LENGTH);
 			int thisReachIndex = coordToIndex(thisX,flipY,REACHABILITY_MATRIX_LENGTH);
-			endTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex];
+			endTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex] + ob[thisBoardIndex];
 		}
 	}
 	
@@ -353,6 +344,9 @@ Piece charToPiece(char c)
 {
 	switch(c)
 	{
+		case 'S':
+			return Piece::SKIPPY;
+			break;
 		case 'K':
 			return Piece::KING;
 			break;
@@ -380,6 +374,9 @@ Piece intToPiece(int i)
 {
 	switch(i)
 	{
+		case 7:
+			return Piece::SKIPPY;
+			break;
 		case 6:
 			return Piece::KING;
 			break;
@@ -407,6 +404,9 @@ char pieceToChar(Piece p)
 {
 	switch (p)
 	{
+		case Piece::SKIPPY:
+			return 'S';
+			break;
 		case Piece::KING:
 			return 'K';
 			break;

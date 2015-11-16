@@ -7,7 +7,7 @@ const int REACHABILITY_MATRIX_SIZE = 225;
 const int REACHABILITY_MATRIX_LENGTH = 15;
 const int BOARD_MATRIX_SIZE = 64;
 const int BOARD_MATRIX_LENGTH = 8;
-enum class Piece { EMPTY, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, FIB, Count};
+enum class Piece { EMPTY, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, SKIPPY, Count};
 
 void displayBoard(char*, int*, int);
 Piece charToPiece(char);
@@ -39,7 +39,7 @@ public:
 	chessRules();
 	void trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstacles);
 	std::vector<std::vector<int> > _trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dstep, int d, int* sum, std::vector<int> path);
-	int* genEllipse(Piece p, int x1, int y1, int x2, int y2, int& d);
+	int* genEllipse(Piece p, int x1, int y1, int x2, int y2, int& d, int* ob);
 	int* genMove(Piece p, int x, int y, int d);
 	int coordToIndex(int x, int y, int bound);
 	Position indexToCoord(int index, int bound);

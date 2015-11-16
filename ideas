@@ -1,6 +1,6 @@
 Priority    To Do
 
-1           input helper function
+√           input helper function
             	args
                     flags:
                         -a: expect input from assignment description, in the order they are listed for the assignment
@@ -15,13 +15,13 @@ Priority    To Do
 
 1           fix pawn.
 3           fix results when only result is an empty board. (should be zero results);
-1           obstactles passed into trajectory problem, into genEllipse.
+√           obstactles passed into trajectory problem, into genEllipse.
 2           moveString added to _trajectory
 2           graph drawing added to trajectory / _trajectory
             	records tree as traversals happen, by some calculation of the input can it guess how deep 
             	 the tree will go and then how to space out the move strings on each line accordingly?
             	OR, just, i mean, create a tree of moves. create a node structure of strings and connect it.
-1           create another unusual set of move rules
+√           create another unusual set of move rules
 3           a way to input length (maybe review the formal grammar and consider how to pass in lengths)
 3           a way to set whether we want to print all valid trajectories on boards
 
