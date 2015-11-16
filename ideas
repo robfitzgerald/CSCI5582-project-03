@@ -17,22 +17,12 @@ Priority    To Do
 3           fix results when only result is an empty board. (should be zero results);
 √           obstactles passed into trajectory problem, into genEllipse.
 2           moveString added to _trajectory
+
+THIS IS INCORRECT:
 2           graph drawing added to trajectory / _trajectory
             	records tree as traversals happen, by some calculation of the input can it guess how deep 
             	 the tree will go and then how to space out the move strings on each line accordingly?
             	OR, just, i mean, create a tree of moves. create a node structure of strings and connect it.
 √           create another unusual set of move rules
-3           a way to input length (maybe review the formal grammar and consider how to pass in lengths)
+1           a way to input length (maybe review the formal grammar and consider how to pass in lengths)
 3           a way to set whether we want to print all valid trajectories on boards
-
-
-std::string getChessNotation(TYPE t, int x1, int y1, int x2, int y2) {
-    std::string output;
-    output.push_back(getPieceChar(t));
-    output.push_back(97 + x1);
-    output.push_back(49 + y1);
-    output.push_back('-');
-    output.push_back(97 + x2);
-    output.push_back(49 + y2);
-    return output;
-}

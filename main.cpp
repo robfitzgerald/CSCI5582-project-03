@@ -26,7 +26,7 @@ int main (int argc, char** argv)
 		std::vector<int> pos = chessPositionToInt(obstacles[i]);
 		obstacleBoard[coordToIndex(pos[0],pos[1],BOARD_MATRIX_LENGTH)] = 9;
 	}
-	c.trajectory(intToPiece(move[0]),move[1],move[2],move[3],move[4],obstacleBoard);
+	c.trajectory(intToPiece(move[0]),move[1],move[2],move[3],move[4],length,obstacleBoard);
 
 	return 0;
 }

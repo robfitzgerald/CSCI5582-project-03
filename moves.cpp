@@ -129,7 +129,7 @@ chessRules::chessRules()
 	};
 }
 
-void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int* obstacles)
+void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int length, int* obstacles)
 {
 	// given a piece, at a location x1,y1, with a goal x2,y2
 	// sum = genEllipse()
