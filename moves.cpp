@@ -130,23 +130,19 @@ chessRules::chessRules()
 }
 
 void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int length, int* obstacles)
-{
-	// given a piece, at a location x1,y1, with a goal x2,y2
-	// sum = genEllipse()
-	// enter into loop with currentX, currentY, currentD
-	//	m1 = genMove(p,currentX,currentY,1)
-	//	mn = genMove(p,x1,x2,currentD)
-	//	perform m1 ^ m2 ^ sum
-	//	pick first option - an x,y pair. recurse with those and d + 1
-	int d = 0;
-	int* sum = genEllipse(p,x1,y1,x2,y2,d,obstacles);
+{	
+	//int d = 0;
+	int* sum = genEllipse(p,x1,y1,x2,y2,length,obstacles);
+	char sumT [] = "complete trajectories";
+	displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
+	// was using 'd' as my distance, a calculated value. replaced with the paramater 'length'
 	std::vector<int> path;
 	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
 	{
 		path.push_back(0);
 	}
 	std::cout << "initialized\n";
-	std::vector<std::vector<int> > result = _trajectory(p,x1,y1,x1,y1,1,d, sum, path);
+	std::vector<std::vector<int> > result = _trajectory(p,x1,y1,x1,y1,1,length, sum, path);
 	for (int i = 0; i < result.size(); ++i) 
 	{
 		char title [] = "~";
@@ -157,8 +153,6 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int length,
 		}	
 		displayBoard(title,printout,BOARD_MATRIX_LENGTH);
 	}
-	char sumT [] = "complete trajectories";
-	displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
 	std::cout << "done, with " << result.size() << " results\n";
 
 }
@@ -239,7 +233,7 @@ int* chessRules::genMove(Piece p, int x, int y, int d)
 // assumes we are determining the trajcetory ellipse, which is for an 8x8
 // board stored in an integer array of size 64.
 // returns a copy of the ellipse board
-int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd, int& d, int* ob) 
+int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd, int d, int* ob) 
 {
 	int* ellipse = new int [BOARD_MATRIX_SIZE];
 	int* startTrajectories = new int [BOARD_MATRIX_SIZE]; 
@@ -279,11 +273,12 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 			endTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex] + ob[thisBoardIndex];
 		}
 	}
-	
+
+	// WRONGGGGGG!!!!!!!!  now passing length value into function, from user input	
 	// distance
-	int distanceToEnd = startTrajectories[coordToIndex(xEnd,yEnd,BOARD_MATRIX_LENGTH)];
-	int distanceToStart = endTrajectories[coordToIndex(xStart,yStart,BOARD_MATRIX_LENGTH)];
-	d = ((distanceToEnd > distanceToStart) ? distanceToEnd : distanceToStart);
+	// int distanceToEnd = startTrajectories[coordToIndex(xEnd,yEnd,BOARD_MATRIX_LENGTH)];
+	// int distanceToStart = endTrajectories[coordToIndex(xStart,yStart,BOARD_MATRIX_LENGTH)];
+	// d = ((distanceToEnd > distanceToStart) ? distanceToEnd : distanceToStart);
 	
 	// ellipse
 	for (int index = 0; index < BOARD_MATRIX_SIZE; ++index)
@@ -293,10 +288,10 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 			ellipse[index] = d;
 		}
 	}
-	char sT [] = "startTrajectories";
-	char eT [] = "endTrajectories";
-	displayBoard(sT,startTrajectories,BOARD_MATRIX_LENGTH);
-	displayBoard(eT,endTrajectories,BOARD_MATRIX_LENGTH);
+	// char sT [] = "startTrajectories";
+	// char eT [] = "endTrajectories";
+	// displayBoard(sT,startTrajectories,BOARD_MATRIX_LENGTH);
+	// displayBoard(eT,endTrajectories,BOARD_MATRIX_LENGTH);
 	return ellipse;
 }
 

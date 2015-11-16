@@ -40,7 +40,7 @@ public:
 	chessRules();
 	void trajectory(Piece p, int x1, int y1, int x2, int y2, int length, int* obstacles);
 	std::vector<std::vector<int> > _trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dstep, int d, int* sum, std::vector<int> path);
-	int* genEllipse(Piece p, int x1, int y1, int x2, int y2, int& d, int* ob);
+	int* genEllipse(Piece p, int x1, int y1, int x2, int y2, int d, int* ob);
 	int* genMove(Piece p, int x, int y, int d);
 	int coordToIndex(int x, int y, int bound);
 	Position indexToCoord(int index, int bound);
