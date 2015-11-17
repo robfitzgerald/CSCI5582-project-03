@@ -2,6 +2,7 @@
 #include <vector>
 #include "math.h"
 #include "moves.h"
+#include "helper.h"
 
 chessRules::chessRules() 
 {
@@ -150,7 +151,8 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int length,
 {	
 	//int d = 0;
 	int* sum = genEllipse(p,x1,y1,x2,y2,length,obstacles);
-	char sumT [] = "complete trajectories";
+	std::cout << "\n=-=-=- all trajectories of length " << length << " -=-=-=\n\n";
+	char sumT [] = "~";
 	displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
 	// was using 'd' as my distance, a calculated value. replaced with the paramater 'length'
 	std::vector<int> path;
@@ -158,8 +160,9 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int length,
 	{
 		path.push_back(0);
 	}
-	std::cout << "initialized\n";
-	std::vector<std::vector<int> > result = _trajectory(p,x1,y1,x1,y1,1,length, sum, path);
+	std::cout << "=-=-=- list of move strings -=-=-=\n\n";
+	std::vector<std::vector<int> > result = _trajectory(p,x1,y1,x1,y1,1,length, sum, path, "");
+	std::cout << "=-=-=- chess board representation -=-=-=\n\n";
 	for (int i = 0; i < result.size(); ++i) 
 	{
 		char title [] = "~";
@@ -174,23 +177,32 @@ void chessRules::trajectory(Piece p, int x1, int y1, int x2, int y2, int length,
 
 }
 
-std::vector<std::vector<int> > chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum, std::vector<int> path)
+std::vector<std::vector<int> > chessRules::_trajectory(Piece p, int x1, int y1, int thisX, int thisY, int dStep, int d, int* sum, std::vector<int> path, std::string moveString)
 {
 	std::vector<std::vector<int> > paths;
 	if (dStep > d) 
 	{
+		// leaf in tree. returns this path, which is a valid trajectory from start to end
+		if (moveString.length() > 4)
+		{
+			moveString.erase((moveString.end()-4),moveString.end());  // remove the last arrow
+			std::cout << moveString << std::endl;
+		}
 		paths.push_back(path);
 		return paths;
 	}
 
+	// data for this node in this trajectory branch
 	int* m1 = genMove(p,thisX,thisY,1);
 	int* mn = genMove(p,x1,y1,dStep);
-	int* map = new int [BOARD_MATRIX_SIZE];
+	int* next = new int [BOARD_MATRIX_SIZE];
 	std::vector<Position> possibles;
+
+	// build list of valid next moves, in other words, the next() operation
 	for (int i = 0; i < BOARD_MATRIX_SIZE; ++i) 
 	{
 		int found = (((sum[i] > 0) && (m1[i] > 0) && (mn[i] > 0)) ? 1 : 0);
-		map[i] = found;
+		next[i] = found;
 		if (found > 0) 
 		{
 			Position foundP = indexToCoord(i, BOARD_MATRIX_LENGTH);
@@ -204,22 +216,27 @@ std::vector<std::vector<int> > chessRules::_trajectory(Piece p, int x1, int y1, 
 	// displayBoard(sumT,sum,BOARD_MATRIX_LENGTH);
 	// displayBoard(m1T,m1,BOARD_MATRIX_LENGTH);
 	// displayBoard(mnT,mn,BOARD_MATRIX_LENGTH);
-	// displayBoard(moveT,map,BOARD_MATRIX_LENGTH);
+	// displayBoard(moveT,next,BOARD_MATRIX_LENGTH);
 
 	// decision tree
 	for (int i = 0; i < possibles.size(); ++i)
 	{
 		std::vector<int> nextPath = path;
 		nextPath[coordToIndex(possibles[i].x,possibles[i].y,BOARD_MATRIX_LENGTH)] = 1;
-		std::vector<std::vector<int> > thesePaths = _trajectory(p,x1,y1,possibles[i].x,possibles[i].y,dStep+1,d,sum,nextPath);
+		std::string nextMoveString = moveString;
+		nextMoveString += intToChessNotation(p,thisX,thisY,possibles[i].x,possibles[i].y);
+		nextMoveString += " -> ";
+		std::vector<std::vector<int> > thesePaths = _trajectory(p,x1,y1,possibles[i].x,possibles[i].y,dStep+1,d,sum,nextPath,nextMoveString);
 		for (int j = 0; j < thesePaths.size(); ++j)
 		{
 			paths.push_back(thesePaths[j]);
 		}
 	}
+
+	// good housekeeping
 	delete [] m1;
 	delete [] mn;
-	delete [] map;
+	delete [] next;
 	return paths;
 }
 
@@ -351,13 +368,13 @@ int asInt(Piece p) {
 void displayBoard(char* piece, int* board, int length)
 {
 	// header
-	std::cout << "   --------";
+	std::cout << "-------";
 	int pieceIter = 0;
 	while (piece[pieceIter]) {
 		std::cout << piece[pieceIter];
 		++pieceIter;
 	}
-	std::cout << "--------\n";
+	std::cout << "-------\n";
 
 	// print right-side up, by y descending, x ascending
 	for (int y = length-1; y >= 0; --y) {  
