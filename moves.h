@@ -48,6 +48,7 @@ public:
 	
 private:
 	int** reachabilities;
+	int* PAWN_REVERSE;
 };
 
 #endif

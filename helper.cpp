@@ -95,8 +95,9 @@ void printUsageToConsole()
 {
 	std::cout << "\nusage: \n";
 	std::cout << "./trajectories <chess-move> <length> [<obstacle> ..]\n";
-	std::cout << "<chess-move> : <piece><position>-<position>\n";
-	std::cout << "<piece> : K | Q | r | b | k | p | S\n";
+	std::cout << "<chess-move> : <piece><position>-<position>  (example: Ka4-h4)\n";
+	std::cout << "<piece> : K   | Q    | r   | b     | k     | p   | S\n";
+	std::cout << "          King  Queen  rook  bishop  knight  pawn  Skippy-the-wonder-piece\n";
 	std::cout << "<position> : ([a-g][1-8])\n";
 	std::cout << "<length> : [1-7]\n";
 	std::cout << "<obstacle> : <position>\n";

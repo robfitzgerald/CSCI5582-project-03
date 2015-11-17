@@ -91,7 +91,6 @@ chessRules::chessRules()
 		5,4,5,4,3,4,3,4,3,4,3,4,5,4,5,
 		6,5,4,5,4,5,4,5,4,5,4,5,4,5,6,
 	};
-	// upside-down since array index 0 is the upper-left corner
 	reachabilities[(int)Piece::PAWN] = new int [REACHABILITY_MATRIX_SIZE] {
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -101,13 +100,31 @@ chessRules::chessRules()
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,
-		0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,
-		0,0,0,0,3,3,3,3,3,3,3,0,0,0,0,
-		0,0,0,4,4,4,4,4,4,4,4,4,0,0,0,
-		0,0,5,5,5,5,5,5,5,5,5,5,5,0,0,
-		0,6,6,6,6,6,6,6,6,6,6,6,6,6,0,
-		7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+		0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,
+	};
+	// not stored in reachabilities** - that would throw off the move type calculations
+	PAWN_REVERSE = new int [REACHABILITY_MATRIX_SIZE] {
+		0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 	// skips
 	reachabilities[(int)Piece::SKIPPY] = new int [REACHABILITY_MATRIX_SIZE] {
@@ -262,15 +279,28 @@ int* chessRules::genEllipse(Piece p, int xStart, int yStart, int xEnd, int yEnd,
 	}
 
 	// endTrajectories
+	// if the Piece is a Piece::PAWN then we need to substitute in the int* PAWN_REVERSE
+	// a hack solution for this project. ideally, get the math right to read it backwards!
+	// but for now this will suffice.
+	int* endReachabilityMatrix;
+	if (p == Piece::PAWN)
+	{
+		endReachabilityMatrix = PAWN_REVERSE;
+	} 
+	else 
+	{
+		endReachabilityMatrix = reachabilities[(int)p];
+	}
+
 	for (int yIter = 0; yIter < BOARD_MATRIX_LENGTH; ++yIter) 
 	{
 		for (int xIter = 0; xIter < BOARD_MATRIX_LENGTH; ++xIter) 
 		{
 			int thisX = xIter + xEndOffset;
-			int flipY = yIter + yEndOffset;  // TODO: isn't flipping for pawn
+			int thisY = yIter + yEndOffset;  // TODO: isn't flipping for pawn
 			int thisBoardIndex = coordToIndex(xIter,yIter,BOARD_MATRIX_LENGTH);
-			int thisReachIndex = coordToIndex(thisX,flipY,REACHABILITY_MATRIX_LENGTH);
-			endTrajectories[thisBoardIndex] = reachabilities[(int)p][thisReachIndex] + ob[thisBoardIndex];
+			int thisReachIndex = coordToIndex(thisX,thisY,REACHABILITY_MATRIX_LENGTH);
+			endTrajectories[thisBoardIndex] = endReachabilityMatrix[thisReachIndex] + ob[thisBoardIndex];
 		}
 	}
 
